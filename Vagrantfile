@@ -109,6 +109,8 @@ Vagrant.configure(2) do |config|
 	  # start apache
 		sudo service httpd start
 		sudo service mysql start
+	  # Set mysql root password to root
+	  	mysqladmin -uroot password root
      # install gnome & start it with: $ startx from command line
      # sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop"
    SHELL
