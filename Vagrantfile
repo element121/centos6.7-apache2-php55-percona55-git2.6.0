@@ -112,6 +112,6 @@ Vagrant.configure(2) do |config|
 	  # Set mysql root password to root
 	  	mysqladmin -uroot password root
      # install gnome & start it with: $ startx from command line
-     # sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop"
+     # sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop" "Fonts"
    SHELL
 end
