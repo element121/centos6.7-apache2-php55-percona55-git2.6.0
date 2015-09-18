@@ -103,6 +103,10 @@ Vagrant.configure(2) do |config|
       # install composer
 		cd ~/bin && curl -sS https://getcomposer.org/installer | php
 		mv composer.phar composer
+	  # install compass
+		sudo yum -y install gcc ruby ruby-devel rubygems compass	
+		sudo gem update --system
+		sudo gem install compass
       # install n98-magerun
 		cd ~/bin && wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
 		mv n98-magerun.phar n98-magerun
