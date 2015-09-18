@@ -72,7 +72,7 @@ Vagrant.configure(2) do |config|
 		sudo yum install -y zlib-devel perl-ExtUtils-MakeMaker asciidoc xmlto openssl-devel curl-devel openssl expat expat-devel 
       # Install apache
 		sudo yum install -y apache
-      
+
       # php55 install
       	sudo rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
       	sudo yum install -y php55w php55w-gd php55w-dom php55w-mcrypt php55w-intl php55w-xsl php55w-mbstring 
@@ -110,9 +110,14 @@ Vagrant.configure(2) do |config|
       # install n98-magerun
 		cd ~/bin && wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
 		mv n98-magerun.phar n98-magerun
-	  # start apache
+	  # start apache && mysql on startup also
 		sudo service httpd start
 		sudo service mysql start
+		sudo /sbin/chkconfig --add httpd
+		sudo /sbin/chkconfig --add mysql
+		sudo /sbin/chkconfig httpd on
+		sudo /sbin/chkconfig mysql on
+
 	  # Set mysql root password to root
 	  	mysqladmin -uroot password root
      # install gnome & start it with: $ startx from command line
