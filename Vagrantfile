@@ -123,5 +123,6 @@ Vagrant.configure(2) do |config|
      # install gnome & start it with: $ startx from command line
      # sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop" "Fonts"
      # sudo yum -y install firefox
+     # sudo yum -y install java-1.8.0-openjdk
    SHELL
 end
