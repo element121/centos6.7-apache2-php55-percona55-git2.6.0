@@ -79,7 +79,7 @@ Vagrant.configure(2) do |config|
 	
       # percona install
 		sudo rpm -Uvh http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
-		sudo yum install -y Percona-Server-server-55
+		sudo yum install -y Percona-Server-server-56
  
       # Open http port 80
 		sudo iptables -I INPUT 5  -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
