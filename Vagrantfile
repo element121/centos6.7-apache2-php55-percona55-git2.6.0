@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
 
       # php55 install
       	sudo rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
-      	sudo yum install -y php55w php55w-gd php55w-dom php55w-mcrypt php55w-intl php55w-xsl php55w-mbstring 
+      	sudo yum install -y php55w php55w-gd php55w-dom php55w-mcrypt php55w-intl php55w-xsl php55w-mbstring php55w-pdo php55w-mysql
 	
       # percona install
 		sudo rpm -Uvh http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
