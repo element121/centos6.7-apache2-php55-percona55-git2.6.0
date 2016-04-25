@@ -66,64 +66,92 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
-  		sudo yum  update -y
-      # Developer tools
-		sudo yum groupinstall -y "Development Tools"
-		sudo yum install -y zlib-devel perl-ExtUtils-MakeMaker asciidoc xmlto openssl-devel curl-devel openssl expat expat-devel 
-      # Install apache
-		sudo yum install -y apache
+	 sudo yum  update -y
+# Developer tools
+sudo yum install -y vim tree
+sudo yum groupinstall -y "Development Tools"
+sudo yum install -y zlib-devel perl-ExtUtils-MakeMaker asciidoc xmlto openssl-devel curl-devel openssl expat expat-devel 
 
-      # php55 install
-      	sudo rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
-	sudo yum install -y php55w php55w-gd php55w-dom php55w-mcrypt php55w-pecl-xdebug
-	sudo yum install -y php55w-intl php55w-xsl php55w-mbstring php55w-pdo php55w-mysql
-	
-      # percona install
-		sudo rpm -Uvh http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
-		sudo yum install -y Percona-Server-server-56
+# Install apache
+sudo yum install -y apache
+
+# php55 install
+sudo rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
+sudo yum install -y php55w php55w-gd php55w-dom php55w-mcrypt php55w-pecl-xdebug
+sudo yum install -y php55w-intl php55w-xsl php55w-mbstring php55w-pdo php55w-mysql	
+
+# percona install
+sudo rpm -Uvh http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+sudo yum install -y Percona-Server-server-56
  
-      # Open http port 80
-		sudo iptables -I INPUT 5  -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
-		sudo service iptables save
-		sudo service iptables restart
+# Open http port 80
+sudo iptables -I INPUT 5  -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+sudo service iptables save
+sudo service iptables restart
 	
 
-       # git install
-      	cd ~
-      	wget -O git.zip https://github.com/git/git/archive/master.zip
-      	unzip git.zip
-      	cd git-master
-      	make configure
-      	./configure --prefix=/usr/local --with-expat --with-openssl
-      	make all doc
-        sudo make install install-doc install-html
-     	cd ~ && rm git.zip && rm -rf git-master
+# git install
+cd /tmp
+wget -O git.zip https://github.com/git/git/archive/master.zip
+unzip git.zip
+cd git-master
+make configure
+./configure --prefix=/usr/local --with-expat --with-openssl
+make all doc
+sudo make install install-doc install-html
+cd /tmp; rm git.zip ; rm -rf git-master
 
-		cd ~ && mkdir bin
 
-      # install composer
-		cd ~/bin && curl -sS https://getcomposer.org/installer | php
-		mv composer.phar composer
-	  # install compass
-		sudo yum -y install gcc ruby ruby-devel rubygems compass	
-		sudo gem update --system
-		sudo gem install compass
-      # install n98-magerun
-		cd ~/bin && wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
-		mv n98-magerun.phar n98-magerun
-	  # start apache && mysql on startup also
-		sudo service httpd start
-		sudo service mysql start
-		sudo /sbin/chkconfig --add httpd
-		sudo /sbin/chkconfig --add mysql
-		sudo /sbin/chkconfig httpd on
-		sudo /sbin/chkconfig mysql on
+# install composer
+mkdir -p /home/vagrant/bin; cd /home/vagrant/bin
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar composer
 
-	  # Set mysql root password to root
-	  	mysqladmin -uroot password root
-     # install gnome & start it with: $ startx from command line
-      sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop" "Fonts"
-      sudo yum -y install firefox
-      sudo yum -y install java-1.8.0-openjdk
+# install n98-magerun
+cd /home/vagrant/bin && wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
+mv n98-magerun.phar n98-magerun
+
+# install compass
+sudo yum -y install gcc ruby ruby-devel rubygems compass	
+sudo gem update --system
+sudo gem install compass
+
+
+# start apache && mysql on startup also
+sudo service httpd start
+sudo service mysql start
+sudo /sbin/chkconfig --add httpd
+sudo /sbin/chkconfig --add mysql
+sudo /sbin/chkconfig httpd on
+sudo /sbin/chkconfig mysql on
+
+# Set mysql root password to root
+mysqladmin -uroot password root
+
+# Prepare magento folder & vhost config
+mkdir -p /home/vagrant/www/magento
+cp /vagrant/resources/index.php /home/vagrant/www/magento/.
+sudo sed -i -e 's/User apache/User vagrant/g' /etc/httpd/conf/httpd.conf; \
+sudo sed -i -e 's/Group apache/Group vagrant/g' /etc/httpd/conf/httpd.conf
+sudo cp /vagrant/resources/magento.conf /etc/httpd/conf.d/.
+
+# Add the magento.dev.loc in the /etc/hosts
+cat /etc/hosts > /tmp/hosts; cat /vagrant/resources/hosts >> /tmp/hosts
+sudo mv /tmp/hosts /etc/hosts
+sudo service httpd restart
+
+# install gnome & start it with: $ startx from command line
+sudo yum -y groupinstall "X Window System" "Desktop" "General Purpose Desktop" "Fonts"
+sudo yum -y install firefox
+sudo yum -y install java-1.8.0-openjdk
+
+# install sublime3
+cd /tmp && \
+wget https://download.sublimetext.com/sublime_text_3_build_3103_x64.tar.bz2 &&  \
+sudo tar -vxjf sublime_text_3_build_3103_x64.tar.bz2 -C /opt && \
+sudo ln -s /opt/sublime_text_3/sublime_text /usr/bin/sublime3
+
+# reboot the machine 
+sudo shutdown -r now
    SHELL
 end
